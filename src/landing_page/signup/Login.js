@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import axios from 'axios';
+import {Link,useNavigate} from 'react-router-dom'
+// import UserAuth from "../UserAuth";
 
-function Signup() {
+
+function Login() {
+
+const navigate = useNavigate();
 const [userInfo,setUserInfo] = useState({
     email:"",
-    username:"",
     password:""
 });
-
 const [emailValidErr,setemailValidErr] = useState("");
-const [usernameValidErr,setUSerNameValidErr] = useState("");
 const [passwordValidErr,setpasswordValidErr] = useState("");
 
 
@@ -31,34 +33,29 @@ const handleError = (msg) =>{
   const handleSuccess = (msg) =>{
     setSuccessMsg(msg);
   }
-
-  function handleValidation(){
-    let res =true;
-    setemailValidErr("");
-    setUSerNameValidErr("");
-    setpasswordValidErr("");
-    if(userInfo.email === ""){
-      setemailValidErr("email is required");
-      res=false
-    }
-    if(userInfo.password === ""){
-      setUSerNameValidErr("userName is required");
-     res=false;
-    }
-   if(userInfo.password === ""){
-      setpasswordValidErr("password is required");
-     res=false;
-    }
-    
-    return res;
+  
+function handleValidation(){
+  let res =true;
+  setemailValidErr("");
+  setpasswordValidErr("");
+  if(userInfo.email === ""){
+    setemailValidErr("email required");
+    res=false
   }
-
+ if(userInfo.password === ""){
+    setpasswordValidErr("password required");
+   res=false;
+  }
+  
+  return res;
+}
 async function handleSubmit(e){
 e.preventDefault();
+console.log(userInfo);
+let isvalid = handleValidation();
 try{
-  let isvalid = handleValidation();
   if(isvalid){
-const {data} = await axios.post("http://localhost:3002/signup",
+const {data} = await axios.post("http://localhost:3002/login",
     {...userInfo},
     {withCredentials:true}
 );
@@ -69,23 +66,22 @@ const {message,success} = data;
 // alert(message);}
 if (success) {
     handleSuccess(message);
-    // setTimeout(() => {
-    //   navigate("/");
-    // }, 1000);
-  } else {
+     window.location.href = 'http://localhost:3001/';
+  
+ } else {
     handleError(message);
   }
-  }
+}
 }catch(err){
     console.log(err);
 }
-// setUserInfo({...userInfo,email:"",username:"",password:""});
+// setUserInfo({...userInfo,email:"",password:""});
 }
 
   return (
     <>
-    <div className="row col-4 offset-4">
-    <h2 className="mt-3">Signup on Zerodha</h2>
+    <div className="row col-4 offset-4 mb-5">
+    <h2 className="mt-3">Login on Zerodha</h2>
       <form>
         {errorMsg && <h4 style={{color:'red'}}>{errorMsg}</h4>}
         {successMsg && <h4 style={{color:'green'}}>{successMsg}</h4>}
@@ -101,29 +97,11 @@ if (success) {
           placeholder="Enter email"
           value={userInfo.email}
           onChange={handleInputChange}
-          required={true}
-        ></input>
-        {emailValidErr && <p style={{color:'red'}}>{emailValidErr}</p>}
-
-        </div>
-
-        <div>
-        <label htmlFor="username" className="form-label mt-3">
-          Username
-        </label>
-        <input
-          type="text"
-          className="form-control"
-          id="username"
-          name="username"
-          placeholder="Enter username"
-          value={userInfo.username}
-          onChange={handleInputChange}
           required
         ></input>
-        {usernameValidErr && <p style={{color:'red'}}>{usernameValidErr}</p>}
-
+        {emailValidErr && <p style={{color:'red'}}>{emailValidErr}</p>}
         </div>
+
         <div>
         <label htmlFor="password" className="form-label mt-3">
           Password
@@ -136,16 +114,16 @@ if (success) {
           placeholder="Enter password"
           value={userInfo.password}
           onChange={handleInputChange}
-          required
         ></input>
         {passwordValidErr && <p style={{color:'red'}}>{passwordValidErr}</p>}
-
         </div>
-        <button className="btn btn-primary mt-3 mb-5" onClick={handleSubmit}>Signup</button>
+        <button className="btn btn-primary mt-3" onClick={handleSubmit}>Login</button>
+        <br/>
+        <span>Don't have Account? <Link to={'/Signup'}>Signup</Link></span>
       </form>
       </div>
     </>
   );
 }
 
-export default Signup;
+export default Login;

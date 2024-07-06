@@ -19,6 +19,9 @@ function Navbar() {
           <Link  to='/signup' className="nav-link active" aria-current="page">Signup</Link>
         </li>
         <li className="nav-item ">
+          <Link  to='/login' className="nav-link active" aria-current="page">Login</Link>
+        </li>
+        <li className="nav-item ">
         <Link  to='/about' className="nav-link">About</Link>
         </li>
         <li className="nav-item ">
